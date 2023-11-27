@@ -9,6 +9,8 @@ import './index.css';
 
 export default function App() {
   const [items, setItems] = useState([]);
+  // const nbItems = items.length;
+  // const nbItemsPacked = items.filter((item) => item.packed === true).length;
 
   function handleAddItems(item) {
     setItems((items) => [...items, item]);
@@ -34,7 +36,7 @@ export default function App() {
         onRemoveItem={handdleRemoveItem}
         onIsPacked={handdleIsPacked}
       />
-      <Stats />
+      <Stats items={items} />
     </div>
   );
 }
@@ -115,10 +117,25 @@ function Item({ item, onRemoveItem, onIsPacked }) {
   );
 }
 
-function Stats() {
+function Stats({ items }) {
+  if (!items.length)
+    return (
+      <p className='stats'>
+        <em>Start adding some items to your packing list 🚀</em>
+      </p>
+    );
+
+  const nbItems = items.length;
+  const nbItemsPacked = items.filter((item) => item.packed).length;
+  let stat = nbItems > 0 ? Math.round((nbItemsPacked * 100) / nbItems) : 0;
+  console.log(stat);
   return (
     <footer className='stats'>
-      <em>You have X items on your list, and you already packed (X%)</em>
+      <em>
+        {stat === 100
+          ? 'You got everything! Ready to go ✈️!'
+          : `You have ${nbItems} items on your list, and you already packed ${nbItemsPacked} (${stat}%)`}
+      </em>
     </footer>
   );
 }
